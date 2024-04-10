@@ -99,26 +99,41 @@ export const useUsuariosStore = defineStore("usuariosStore", {
             }
         },
 
-        async ActualizarImagen (Imagen) {
-            try {
-                console.log(Imagen)
+        //async ActualizarImagen (Imagen) {
+            //try {
+                //console.log(Imagen)
 
-                const storageRef = ref(storage, `${this.usuarioData.Uid}/Perfil`)
+                /* const storageRef = ref(storage, `${this.usuarioData.Uid}/Perfil`) */
+
+                /* const storageRef = ref(storage, `perfiles/${this.usuarioData.Uid}`)
                 await uploadBytes(storageRef, Imagen.originFileObj)
                 const Photo = await getDownloadURL(storageRef)
                 //console.log(Url)
                 await updateProfile(auth.currentUser, {
                     photoURL : Photo  
                 })
+                this.setUsuario(auth.UsuarioActual) */
 
-            } catch (error) {
-                console.log(error)
-                return error.code
-            }
-        },
+            //} catch (error) {
+            //    console.log(error)
+           //     return error.code
+        //}
+       // },
 
-        async ActualizarPerfil (displayName) {
+        async ActualizarPerfil (displayName, Imagen) {
+            this.loadingUser = true
+
             try {
+
+                if(Imagen) {
+                    const storageRef = ref(storage, `perfiles/${this.usuarioData.Uid}`)
+                    await uploadBytes(storageRef, Imagen.originFileObj)
+                    const Photo = await getDownloadURL(storageRef)
+                    await updateProfile(auth.currentUser, {
+                    photoURL : Photo  
+                })
+                }
+                
                 await updateProfile(auth.currentUser, {
                     displayName : displayName
                 })
@@ -126,6 +141,10 @@ export const useUsuariosStore = defineStore("usuariosStore", {
             } catch (error) {
                 console.log(error.message)
                 return error.message
+            }
+
+            finally {
+                this.loadingUser = false
             }
         },
 

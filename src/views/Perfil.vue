@@ -84,14 +84,14 @@ const beforeUpload = (file) => {
 
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
   if (!isJpgOrPng) {
-    message.error('Solamente archivos JPG son permitidos!');
-    /* handleRemove() */
+    message.error('Solamente archivos JPG y PNG son permitidos!');
+    handleRemove()
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+  const isLt5M = file.size / 1024 / 1024 < 5;
+  if (!isLt5M) {
+    message.error('Imagenes de hasta 5MB son permitidas');
   }
-  //return isJpgOrPng && isLt2M;
+  return isJpgOrPng && isLt5M;
 
   fileList.value = [...fileList.value, file];
     return false;
@@ -101,15 +101,15 @@ const beforeUpload = (file) => {
 const onFinish = async (value) => {
   /* console.log(fileList.value[0]) */
 
-  const Error = await userStore.ActualizarPerfil(userStore.usuarioData.DisplayName)
+  const Error = await userStore.ActualizarPerfil(userStore.usuarioData.DisplayName, fileList.value[0])
 
-  if (fileList.value[0]) {
-    const Error = await userStore.ActualizarImagen(fileList.value[0])
-    if (Error) {
-      return message.success(' Problema con tu foro de Perfil ')
-    }
-    message.success(' Foto de perfil actualizada correctamente')
-  }
+  //if (fileList.value[0]) {
+    /* const Error = await userStore.ActualizarImagen(fileList.value[0]) */
+    //if (Error) {
+      //return message.success(' Problema con tu foto de Perfil ')
+    //}
+    //message.success(' Foto de perfil actualizada correctamente')
+  //}
 
   /* fileList.value.forEach(file => {
         console.log(file)

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore/lite";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore/lite";
 import { db } from "../firebaseConfig";
 
 import { auth } from "../firebaseConfig";
@@ -19,6 +19,29 @@ export const useDatabaseStore = defineStore('database', {
     }),   
 
     actions: {
+
+        async getUrl( id ) {
+            try {
+                const docRef = doc(db, 'urls', id) 
+                const DocSpan = await getDoc(docRef) 
+                if (!DocSpan.exists()) {
+                    /* throw new Error("Este documento no existe") */
+
+                    return false
+                }
+                
+                return DocSpan.data().name
+
+            } catch (error) {
+                console.log(error.message)
+
+                return false
+            }
+            finally {
+
+            }
+        },
+
         async getUrls() {
             /* if(this.documents.length !== 0)
                 return */
@@ -55,11 +78,16 @@ export const useDatabaseStore = defineStore('database', {
                     short: nanoid(6),
                     user: auth.currentUser.uid
                 }
-                const docRef = await addDoc(collection(db, "urls"), objectDoc)
+                //const docRef = await addDoc(collection(db, "urls"), objectDoc)
+
+                const docRef = await setDoc(doc(db, "urls", objectDoc.short), objectDoc)
+
                 /* console.log(docRef.id) */
                 this.documents.push({
                     ...objectDoc,
-                    id: docRef.id
+                    /* id: docRef.id */
+
+                    id: objectDoc.short,
                 })
             } catch (error) {
                 console.log(error.code)
