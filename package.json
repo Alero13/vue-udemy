@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^3.2.20",
-    "firebase": "^9.19.1",
+    "firebase": "^9.23.0",
     "nanoid": "^4.0.2",
     "pinia": "^2.0.33",
     "unplugin-vue-components": "^0.24.1",
